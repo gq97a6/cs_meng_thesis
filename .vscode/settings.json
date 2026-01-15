@@ -1,0 +1,21 @@
+{
+  "files.exclude": {
+    "*.fls": true,
+    "*.aux": true,
+    "*.toc": true,
+    "*.log": true,
+    "*.bbl": true,
+    "*.bcf": true,
+    "*.xml": true,
+    "*.blg": true,
+    "*.lof": true,
+    "*.out": true,
+    "*.synctex(busy)": true,
+    "*.fdb_latexmk": true,
+    "*.synctex.gz": true,
+    "includes/*.aux": true
+  },
+  "cSpell.language": "en,pl",
+  "cSpell.words": [],
+  "editor.wordBasedSuggestions": "off",
+}
