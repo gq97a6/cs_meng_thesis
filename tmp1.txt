@@ -1,0 +1,9 @@
+Internet początkowo rozwijał się jako zdecentralizowana sieć tworzona oddolnie przez niezależne podmioty. Z czasem usługi świadczone za jego pośrednictwem zyskały na znaczeniu, co doprowadziło do ich częściowej monopolizacji przez duże korporacje.\\
+
+Chęć odzyskania kontroli nad danymi i prywatnością, potrzeba ograniczenia kosztów, jak również rosnący nadzór ze strony organów państwowych, motywują użytkowników indywidualnych oraz małe przedsiębiorstwa do samodzielnego utrzymywania prywatnej infrastruktury usługowej.\\
+
+Istotnym elementem takiej infrastruktury są wirtualne sieci prywatne, które umożliwiają wzajemny dostęp urządzeń niezależnie od ich fizycznej lokalizacji. Jest to kluczowe dla zachowania funkcjonalności porównywalnej z rozwiązaniami komercyjnymi.\\
+
+Niniejsza praca ma na celu przegląd oraz porównanie dostępnych rozwiązań z zakresu wirtualnych sieci prywatnych. Analiza ukierunkowana jest na wybór rozwiązania odpowiedniego dla projektów o niskim stopniu złożoności infrastrukturalnej.\\
+
+W ramach badań skupiono się nie tylko na pomiarach wydajności, lecz również na ocenie skalowalności, łatwości wdrożenia oraz stabilności działania w restrykcyjnych warunkach sieciowych.

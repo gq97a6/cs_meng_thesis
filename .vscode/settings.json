@@ -16,6 +16,9 @@
     "includes/*.aux": true
   },
   "cSpell.language": "en,pl",
-  "cSpell.words": [],
+  "cSpell.words": [
+    "selfhost",
+    "selfhosting"
+  ],
   "editor.wordBasedSuggestions": "off",
 }
