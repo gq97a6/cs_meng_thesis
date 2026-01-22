@@ -5,7 +5,7 @@ Celem pracy jest znalezienie rozwiązania możliwego do wdrożenia w sieciach ko
 Jest to decydujący czynnik utrudniający nawiązywanie połączeń z urządzeniami spoza sieci lokalnej. W zależności od typu \tcbox{NAT} za jakimi znajdują się urządzenia, będzie to proces utrudniony bądź w pełni uniemożliwiony.
 
 \subsubsection{Static NAT}
-Przydziela publiczny adres każdemu urządzeniu z puli publicznych adresów. Z tego powodu nie stanowi bariery przy nawiązywaniu bezpośrednich połączeń między urządzeniami. Nie wykorzystywany dla rozwiązań konsumenckich.
+Przydziela publiczny adres każdemu urządzeniu z puli publicznych adresów. Z tego powodu nie stanowi bariery przy nawiązywaniu bezpośrednich połączeń między urządzeniami. Niewykorzystywany dla rozwiązań konsumenckich.
 
 \subsubsection{Dynamic NAT}
 Rozwiązanie rzadziej stosowane działające podobne do statycznego. Jedyna różnica jest taka, że adresy przydzielane są w sposób dynamiczny.
@@ -13,37 +13,14 @@ Rozwiązanie rzadziej stosowane działające podobne do statycznego. Jedyna ró�
 \subsubsection{Network Address and Port Translation (NAPT)}
 Zastosowanie \tcbox{Port Address Translation (PAT)} umożliwia współdzielenie jednego publicznego adresu IP przez wiele urządzeń.\\
 
-Zasada działania tego mechanizmu opiera się na użyciu portów dla rozróżnienia poszczególnych klientów.\\
+Zasada działania tego mechanizmu opiera się na użyciu portów dla rozróżnienia poszczególnych klientów. Każdy port, każdego urządzenia w sieci wewnętrznej, otrzymuje na żądanie port zewnętrzny routera. \tcbox{NAPT} działa jak warstwa translacji. Dla zapytań wychodzących podmienia źródłowy adres IP oraz port na własne. Dla zapytań przychodzących podmienia docelowy adres oraz port na te należące do odbiorcy wewnątrz sieci.\\
 
-\textit{Flow diagram}\\
-
-%Zastąpić diagramem
-%\begin{enumerate}[leftmargin=*]
-%    \item \textbf{Host wewnętrzny wysyła zapytanie do zewnętrznego hosta:}\\
-%    $HostWewnętrznyIP_{src}:Port_{src}$
-%    Od \tcbox{PC:3000} do \tcbox{SERVER:80}.
-%    
-%    \item \textbf{Router wybiera losowy wolny port zewnętrzny:}\\
-%    Port \tcbox{5000} lub port równy oryginalnemu w przypadku braku konfliktu.
-%    
-%    \item \textbf{Router zapamiętuje mapowanie:}\\
-%    Zewnętrzny port \tcbox{5000} jest przeznaczony dla \tcbox{PC:3000}.
-%    
-%    \item \textbf{Router podmienia IP oraz port docelowy w zapytaniu wychodzącym:}\\
-%    Z \tcbox{PC:3000} na \tcbox{ROUTER:5000}.
-%    
-%    \item \textbf{Host zewnetrzny odbiera zapytanie:}\\
-%    Od \tcbox{ROUTER:5000} do \tcbox{SERVER:80}.
-%    
-%    \item \textbf{Host zewnętrzny odsyła odpowiedź:}\\
-%    Od \tcbox{SERVER:80} do \tcbox{ROUTER:5000}.
-%    
-%    \item \textbf{Router podmienia IP oraz port docelowy w zapytaniu przychodzącym:}\\
-%    Z \tcbox{ROUTER:5000} na \tcbox{PC:3000}.
-%    
-%    \item \textbf{Host wewnętrzny odbiera odpowiedź:}\\
-%    Od \tcbox{SERVER:80} do \tcbox{PC:3000}.
-%\end{enumerate}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth]{nat_diagram}
+    \caption{Schemat działania mechanizmu NAT/PAT}
+    \label{fig:natdiagram}
+\end{figure}
 
 \newpage
 
@@ -59,7 +36,9 @@ W tej implementacji host wewnętrzny musi najpierw wysłać zapytanie kierowane 
 W tej implementacji host wewnętrzny musi najpierw wysłać zapytanie kierowane na dany adres oraz port. Zakres akceptowanych pakietów jest zawężony do pakietów z tym adresem źródłowym oraz portem.\\
 
 \textbf{Symmetric NAT}\\
-Najbardziej restrykcyjna implementacja. Posiada ograniczenia adresu i port z tą różnicą że każda ich kombinacja otrzymuje dedykowany port zewnętrzny. Wcześniejsze implementacje współdzielą wybrany port zewnętrzny pomiędzy adresami docelowymi.
+Najbardziej restrykcyjna implementacja. Posiada ograniczenia adresu i port z tą różnicą że każda ich kombinacja otrzymuje dedykowany port zewnętrzny. Wcześniejsze implementacje współdzielą wybrany port zewnętrzny pomiędzy adresami docelowymi.\\
+
+W przypadku gdy oba urządzenia znajdują się za tego typu \tcbox{NAT}-em, nie ma możliwości nawiązania bezpośredniego połączenia pomiędzy nimi.
 
 \subsubsection{Carrier-grade NAT}
 Jest to specyficzny przypadek zastosowania \tcbox{NAPT}. Odnosi się on do jego wykorzystania w sieci wewnętrznej dostawcy internetu. Użytkownik współdzieli jeden adres z innymi klientami dostawcy. Istnieje wiele implementacji \tcbox{CGNAT}. Natomiast główny podział wynika z wykorzystywanego protokołu.\\
@@ -68,7 +47,15 @@ Popularny mechanizm \tcbox{DS-Lite} zakłada że klient nie otrzymuje żadnego a
 
 Wart ponownego odnotowania jest fakt, że jest to specyficzny sposób wykorzystania \tcbox{NAPT}, aniżeli jego konkretna implementacja. Przykładowo, CGNAT może być w implementacji \tcbox{Symmetric}, ale równie dobrze może to być \tcbox{Full Cone NAT}.
 
-\subsection{Wysokie opóźnienia i Jitter}
-\subsection{Utrata pakietów}
-\subsection{Blokada protokołu UDP}
+\newpage
 
+\subsection{Wysokie opóźnienia i jitter}
+VPN z definicji nadaje dodatkowe opóźnienie ponad to bazowe, wynikające z sieci użytkownika. W modelu rozproszonym, opóźnienia są zminimalizowane ponieważ poszczególne urządzenia komunikują się bezpośrednio ze sobą. W modelu scentralizowanym, każdy pakiet musi niejako nadrabiać drogę poprzez przejście przez serwer zanim trafi do odbiorcy.\\
+
+Jest to zależne od zastosowania, jednak opóźnienie może mieć na tyle duży wpływ by kategorycznie wykluczyć wykorzystanie sieci wirtualnych w pewnych przypadkach.
+
+\subsection{Utrata pakietów}
+W tunelach UDP, utrata pakietów powoduje braki w danych, ale nie zatrzymuje całej transmisji. Natomiast w tunelach TCP może ona spowodować zjawisko TCP Meltdown. Zarówno protokół VPN, jak i aplikacja wewnątrz tunelu próbują jednocześnie retransmitować zgubione pakiety. Skutkuje to lawinowym wzrostem opóźnień, drastycznym spadkiem przepustowości i częstym zrywaniem sesji.
+
+\subsection{Blokada protokołu UDP}
+Blokuje działanie najwydajniejszych protokołów, które domyślnie korzystają z UDP.
