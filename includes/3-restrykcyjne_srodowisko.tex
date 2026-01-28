@@ -2,7 +2,7 @@
 Celem pracy jest znalezienie rozwiązania możliwego do wdrożenia w sieciach konsumenckich. Poniższy rozdział definiuje ograniczenia związane z tym środowiskiem.
 
 \subsection{Rodzaje NAT}
-Jest to decydujący czynnik utrudniający nawiązywanie połączeń z urządzeniami spoza sieci lokalnej. W zależności od typu \tcbox{NAT} za jakimi znajdują się urządzenia, będzie to proces utrudniony bądź w pełni uniemożliwiony.
+Jest to decydujący czynnik utrudniający nawiązywanie połączeń z urządzeniami spoza sieci lokalnej. W zależności od typu NAT za jakimi znajdują się urządzenia, będzie to proces utrudniony bądź w pełni uniemożliwiony.
 
 \subsubsection{Static NAT}
 Przydziela publiczny adres każdemu urządzeniu z puli publicznych adresów. Z tego powodu nie stanowi bariery przy nawiązywaniu bezpośrednich połączeń między urządzeniami. Niewykorzystywany dla rozwiązań konsumenckich.
@@ -11,9 +11,9 @@ Przydziela publiczny adres każdemu urządzeniu z puli publicznych adresów. Z t
 Rozwiązanie rzadziej stosowane działające podobne do statycznego. Jedyna różnica jest taka, że adresy przydzielane są w sposób dynamiczny.
 
 \subsubsection{Network Address and Port Translation (NAPT)}
-Zastosowanie \tcbox{Port Address Translation (PAT)} umożliwia współdzielenie jednego publicznego adresu IP przez wiele urządzeń.\\
+Umożliwia współdzielenie jednego publicznego adresu IP przez wiele urządzeń.\\
 
-Zasada działania tego mechanizmu opiera się na użyciu portów dla rozróżnienia poszczególnych klientów. Każdy port, każdego urządzenia w sieci wewnętrznej, otrzymuje na żądanie port zewnętrzny routera. \tcbox{NAPT} działa jak warstwa translacji. Dla zapytań wychodzących podmienia źródłowy adres IP oraz port na własne. Dla zapytań przychodzących podmienia docelowy adres oraz port na te należące do odbiorcy wewnątrz sieci.\\
+Zasada działania tego mechanizmu opiera się na użyciu portów dla rozróżnienia poszczególnych klientów. Każdy port, każdego urządzenia w sieci wewnętrznej, otrzymuje na żądanie port zewnętrzny routera. NAPT działa jak warstwa translacji. Dla zapytań wychodzących podmienia źródłowy adres IP oraz port na własne. Dla zapytań przychodzących podmienia docelowy adres oraz port na te należące do odbiorcy wewnątrz sieci.\\
 
 \begin{figure}[h]
     \centering
@@ -24,7 +24,7 @@ Zasada działania tego mechanizmu opiera się na użyciu portów dla rozróżnie
 
 \newpage
 
-Poszczególne implementacje \tcbox{NAPT} różnią się poziomem restrykcyjności odnośnie filtrowania przychodzących pakietów.\\
+Poszczególne implementacje NAPT różnią się poziomem restrykcyjności odnośnie filtrowania przychodzących pakietów.\\
 
 \textbf{Full Cone NAT}\\
 Najbardziej permisywna implementacja. Nie wprowadza dodatkowych ograniczeń. Mapowanie portów może być predefiniowane lub definiowane w odpowiedzi na wysyłane zapytania.\\
@@ -38,14 +38,30 @@ W tej implementacji host wewnętrzny musi najpierw wysłać zapytanie kierowane 
 \textbf{Symmetric NAT}\\
 Najbardziej restrykcyjna implementacja. Posiada ograniczenia adresu i port z tą różnicą że każda ich kombinacja otrzymuje dedykowany port zewnętrzny. Wcześniejsze implementacje współdzielą wybrany port zewnętrzny pomiędzy adresami docelowymi.\\
 
-W przypadku gdy oba urządzenia znajdują się za tego typu \tcbox{NAT}-em, nie ma możliwości nawiązania bezpośredniego połączenia pomiędzy nimi.
+W przypadku gdy oba urządzenia znajdują się za tego typu NAT-em, nie ma możliwości nawiązania bezpośredniego połączenia pomiędzy nimi.
 
 \subsubsection{Carrier-grade NAT}
-Jest to specyficzny przypadek zastosowania \tcbox{NAPT}. Odnosi się on do jego wykorzystania w sieci wewnętrznej dostawcy internetu. Użytkownik współdzieli jeden adres z innymi klientami dostawcy. Istnieje wiele implementacji \tcbox{CGNAT}. Natomiast główny podział wynika z wykorzystywanego protokołu.\\
+Jest to specyficzny przypadek zastosowania NAPT. Odnosi się on do jego wykorzystania w sieci wewnętrznej dostawcy internetu. Użytkownik współdzieli jeden adres z innymi klientami dostawcy. Istnieje wiele implementacji CGNAT. Natomiast główny podział wynika z wykorzystywanego protokołu.\\
 
-Popularny mechanizm \tcbox{DS-Lite} zakłada że klient nie otrzymuje żadnego adresu IPv4 a jedynie IPv6. Pakiety IPv4 są enkapsulowane w pakiety IPv6 przy przesyle do routera brzegowego dostawcy.\\
+Popularny mechanizm DS-Lite zakłada że klient nie otrzymuje żadnego adresu IPv4 a jedynie IPv6. Pakiety IPv4 są enkapsulowane w pakiety IPv6 przy przesyle do routera brzegowego dostawcy.\\
 
-Wart ponownego odnotowania jest fakt, że jest to specyficzny sposób wykorzystania \tcbox{NAPT}, aniżeli jego konkretna implementacja. Przykładowo, CGNAT może być w implementacji \tcbox{Symmetric}, ale równie dobrze może to być \tcbox{Full Cone NAT}.
+Wart ponownego odnotowania jest fakt, że jest to specyficzny sposób wykorzystania NAPT, aniżeli jego konkretna implementacja. Przykładowo, CGNAT może być w NAT-em symetrycznym, ale równie dobrze może to być Full Cone NAT.
+
+\newpage
+
+\subsection{Metody obejścia NAT}
+
+\subsubsection{UDP Hole Punching}
+
+Ta podstawowa technika polega na wykorzystaniu współdzielonego serwera do wstępnej konfiguracji.\\
+
+Do tego wymagana jest stałość mapowania zewnętrznych portów przez NAPT. Z tego powodu jeżeli obaj klienci znajdują się za symetrycznym NAT-em, nawiązanie połączenia P2P w ten sposób jest niemożliwe.\\
+
+\textit{Diagram}
+
+\subsubsection{STUN (Session Traversal Utilities for NAT)}
+
+\subsubsection{TURN (Traversal Using Relays around NAT)}
 
 \newpage
 

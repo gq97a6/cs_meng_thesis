@@ -5,13 +5,13 @@ Cały ruch sieciowy jest przekierowywany przez centralny serwer. Nawet gdy oba u
 
 Konfiguracja i weryfikacja tożsamości użytkowników następuje na serwerze. Umożliwia to zarządzanie całą siecią, bez konieczności ponownego wdrażania poszczególnych klientów.\\
 
-Sieć w oparciu o publiczny serwer, jako hub dla wszystkich węzłów, usuwa potrzebę nawiązywania bezpośrednich połączeń. Jest to duże uproszczenie w przypadku gdy klient znajduje się za symetrycznym \tcbox{NAT}-em.\\
+Sieć w oparciu o publiczny serwer, jako hub dla wszystkich węzłów, usuwa potrzebę nawiązywania bezpośrednich połączeń. Jest to duże uproszczenie w przypadku gdy klient znajduje się za symetrycznym NAT-em.\\
 
 Centralny węzeł oznacza również pojedynczy punkt awarii oraz wąskie gardło. Przepustowość sieci jest ograniczona wydajnością łącza i procesora serwera centralnego.
 
 \section{Model rozproszony}
 
-Połączenia nawiązywane są bezpośrednio pomiędzy klientami sieci. Zmniejsza to opóźnienia do minimum. Połączenie może być nawiązane bez użycia dodatkowych serwerów. Opcjonalny serwer służy jedynie do wymiany informacji w procesie inicjalizacji połączenia dla klientów za \tcbox{NAT}-em.\\
+Połączenia nawiązywane są bezpośrednio pomiędzy klientami sieci. Zmniejsza to opóźnienia do minimum. Połączenie może być nawiązane bez użycia dodatkowych serwerów. Opcjonalny serwer służy jedynie do wymiany informacji w procesie inicjalizacji połączenia dla klientów za NAT-em.\\
 
 Obciążenie rozkłada się na poszczególne węzły, nie ma więc wąskiego gardła. Znika również pojedynczy punkt awarii, zwiększając odporność sieci.\\
 
