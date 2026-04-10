@@ -67,3 +67,36 @@ Na rysunku \ref{fig:customLabel} przedstawiono monochromatyczne logo uczelni.
 \textbf{Jak dodać obraz o określonej szerokości z dowolnego katalogu?}\\
 \vspace{1em}
 \includegraphics[width=20em]{./images/white/pjatk.png}
+
+\vspace{3em}
+
+\textbf{Jak dodać tabelę?}\\
+\vspace{1em}
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{llr}
+        \toprule
+        \textbf{Przedmiot} & \textbf{Prowadzący} & \textbf{Ocena} \\
+        \midrule
+        Algorytmy & Dr. Kowalski & 5.0 \\
+        Bazy Danych & Prof. Nowak & 4.5 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Wyniki z semestru}
+\end{table}
+
+\vspace{3em}
+
+\textbf{Jak podzielić stronę?}\\
+\vspace{1em}
+
+\begin{minipage}{0.45\textwidth}
+    \textbf{Kolumna Lewa}\\
+    To jest tekst, który będzie wyświetlany po lewej stronie dokumentu.
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+    \textbf{Kolumna Prawa}\\
+    To jest tekst, który będzie wyświetlany po prawej stronie dokumentu.
+\end{minipage}

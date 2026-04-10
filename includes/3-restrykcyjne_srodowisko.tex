@@ -1,7 +1,7 @@
 \section{Restrykcyjne środowisko sieciowe}
-Celem pracy jest znalezienie rozwiązania możliwego do wdrożenia w sieciach konsumenckich. Poniższy rozdział definiuje ograniczenia związane z tym środowiskiem.
+Celem pracy jest znalezienie rozwiązania możliwego do wdrożenia w sieciach konsumenckich. Poniższy rozdział omawia zagadnienia związane z tego typu środowiskiem.
 
-\subsection{Rodzaje NAT}
+\subsection{Rodzaj NAT}
 Jest to decydujący czynnik utrudniający nawiązywanie połączeń z urządzeniami spoza sieci lokalnej. W zależności od typu NAT za jakimi znajdują się urządzenia, będzie to proces utrudniony bądź w pełni uniemożliwiony.
 
 \subsubsection{Static NAT}
@@ -10,35 +10,47 @@ Przydziela publiczny adres każdemu urządzeniu z puli publicznych adresów. Z t
 \subsubsection{Dynamic NAT}
 Rozwiązanie rzadziej stosowane działające podobne do statycznego. Jedyna różnica jest taka, że adresy przydzielane są w sposób dynamiczny.
 
-\subsubsection{Network Address and Port Translation (NAPT)}
-Umożliwia współdzielenie jednego publicznego adresu IP przez wiele urządzeń.\\
+\newpage
 
-Zasada działania tego mechanizmu opiera się na użyciu portów dla rozróżnienia poszczególnych klientów. Każdy port, każdego urządzenia w sieci wewnętrznej, otrzymuje na żądanie port zewnętrzny routera. NAPT działa jak warstwa translacji. Dla zapytań wychodzących podmienia źródłowy adres IP oraz port na własne. Dla zapytań przychodzących podmienia docelowy adres oraz port na te należące do odbiorcy wewnątrz sieci.\\
+\subsubsection{Network Address and Port Translation (NAPT)}
+Umożliwia współdzielenie jednego publicznego adresu IP przez wiele urządzeń. Zasada działania tego mechanizmu opiera się na użyciu portów dla rozróżnienia poszczególnych klientów.\\
+
+Każdy socket (kombinacja adresu i portu) w sieci wewnętrznej ma przypisany swój odpowiednik po publicznej stronie routera.\\
+
+Przypisanie to odbywa się automatycznie, na żądanie, jest tymczasowe oraz w większości losowe.\\
+
+Zapytania wychodzące są przekierowywane przez przypisany socket zewnętrzny (router podmienia adres i port źródłowy zapytań).\\
+
+Analogicznie, wszelkie pakiety przychodzące na przypisany socket zewnętrzny są przekierowywane na socket wewnętrzny (router podmienia adres i port docelowy).\\
+
+Przykład tego procesu został przedstawiony na poniższym diagramie:
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth]{nat_diagram}
-    \caption{Schemat działania mechanizmu NAT/PAT}
+    \caption{Schemat działania mechanizmu NAPT}
     \label{fig:natdiagram}
 \end{figure}
 
 \newpage
 
-Poszczególne implementacje NAPT różnią się poziomem restrykcyjności odnośnie filtrowania przychodzących pakietów.\\
+Istnieje kilka implementacji NAPT różniących się poziomem restrykcyjności odnośnie filtrowania przychodzących pakietów.\\
 
 \textbf{Full Cone NAT}\\
 Najbardziej permisywna implementacja. Nie wprowadza dodatkowych ograniczeń. Mapowanie portów może być predefiniowane lub definiowane w odpowiedzi na wysyłane zapytania.\\
 
 \textbf{Restricted Cone NAT}\\
-W tej implementacji host wewnętrzny musi najpierw wysłać zapytanie kierowane na dany adres. Zakres akceptowanych pakietów jest zawężony do pakietów z tym adresem źródłowym.\\
+W tej implementacji pakiety przychodzące są domyślnie odrzucane. Zapytania wychodzące wyzwalają powstanie tymczasowych reguł akceptujących ruch przychodzący z tego samego adresu co adres docelowy zapytania.\\
 
 \textbf{Port Restricted Cone NAT}\\
-W tej implementacji host wewnętrzny musi najpierw wysłać zapytanie kierowane na dany adres oraz port. Zakres akceptowanych pakietów jest zawężony do pakietów z tym adresem źródłowym oraz portem.\\
+W tej implementacji pakiety przychodzące są domyślnie odrzucane. Zapytania wychodzące wyzwalają powstanie tymczasowych reguł akceptujących ruch przychodzący z tego samego socketu (adres:port) co socket docelowy zapytania.\\
 
 \textbf{Symmetric NAT}\\
-Najbardziej restrykcyjna implementacja. Posiada ograniczenia adresu i port z tą różnicą że każda ich kombinacja otrzymuje dedykowany port zewnętrzny. Wcześniejsze implementacje współdzielą wybrany port zewnętrzny pomiędzy adresami docelowymi.\\
+Najbardziej restrykcyjna implementacja. Posiada te same ograniczenia co poprzednia. Modyfikacja polega na zmianie mechanizmu przypisywania portów zewnętrznych.\\
 
-W przypadku gdy oba urządzenia znajdują się za tego typu NAT-em, nie ma możliwości nawiązania bezpośredniego połączenia pomiędzy nimi.
+Wcześniejsze implementacje współdzielą wybrany socket zewnętrzny pomiędzy adresami docelowymi. W tej implementacji każdy socket wewnętrzny otrzymuje dedykowany socket zewnętrzny, dla każdego zewnętrznego hosta do którego wysłał zapytanie.\\
+
+Gdy oba urządzenia znajdują się za tego typu NAT-em, nie ma możliwości nawiązania bezpośredniego połączenia pomiędzy nimi.
 
 \subsubsection{Carrier-grade NAT}
 Jest to specyficzny przypadek zastosowania NAPT. Odnosi się on do jego wykorzystania w sieci wewnętrznej dostawcy internetu. Użytkownik współdzieli jeden adres z innymi klientami dostawcy. Istnieje wiele implementacji CGNAT. Natomiast główny podział wynika z wykorzystywanego protokołu.\\
@@ -51,17 +63,36 @@ Wart ponownego odnotowania jest fakt, że jest to specyficzny sposób wykorzysta
 
 \subsection{Metody obejścia NAT}
 
-\subsubsection{UDP Hole Punching}
-
-Ta podstawowa technika polega na wykorzystaniu współdzielonego serwera do wstępnej konfiguracji.\\
-
-Do tego wymagana jest stałość mapowania zewnętrznych portów przez NAPT. Z tego powodu jeżeli obaj klienci znajdują się za symetrycznym NAT-em, nawiązanie połączenia P2P w ten sposób jest niemożliwe.\\
-
-\textit{Diagram}
-
 \subsubsection{STUN (Session Traversal Utilities for NAT)}
 
+Jest to protokół sieciowy pozwalający klientowi znajdującemu się za NAT poznać swój publiczny adres IP wyjściowy i port.\\
+
+Klient z wewnątrz sieci prywatnej wysyła zapytanie do serwera STUN dostępnego publicznie. Serwer STUN analizuje nagłówki pakietu i odsyła do klienta odpowiedź zawierającą jego publiczny adres IP i port.\\
+
+Jest to fundament tworzenia połączeń P2P.
+
+\subsubsection{UDP Hole Punching}
+
+Ta podstawowa technika polegająca na wykorzystaniu mechaniki działania NAT.\\
+
+W uproszczeniu proces ten wygląda następująco:
+
+\begin{enumerate}[leftmargin=*]
+    \item Klienci poznają swoje publiczne adresy oraz porty z wykorzystaniem serwera STUN.
+    \item Klienci dokonują wymiany tych informacji za pośrednictwem współdzielonego kanału sygnałowego. Przykładem kanału sygnałowego może być publiczny serwer gry lub backend danej aplikacji.
+    \item Obaj klienci rozpoczynają cykliczne wysyłanie pakietów na otrzymany adres partnera do momentu nawiązania połączenia. W zależności od warunków sieciowych oraz stopnia synchronizacji, część pakietów może zostać odrzucona do momentu gdy druga strona również nie rozpocznie wysyłania.
+    \item Powstają reguły akceptujące ruch przychodzący od strony przeciwnej, istnieje kanał komunikacji P2P.
+\end{enumerate}
+
+Do tego wymagana jest stałość mapowania zewnętrznych portów przez NAPT. W innym przypadku port zewnętrzny zidentyfikowany przez serwer STUN nie będzie się pokrywał z tym który zostanie otwarty dla przeciwległego klienta. Z tego powodu jeżeli obaj klienci znajdują się za symetrycznym NAT-em, nawiązanie połączenia P2P w ten sposób jest niemożliwe.\\
+
 \subsubsection{TURN (Traversal Using Relays around NAT)}
+
+Jest to rozszerzenie protokołu STUN. Umożliwia stworzenie serwera funkcjonującego jako przekaźnik ruchu, w pełni omijając w ten sposób ograniczenia stawiane przez NAT. \\
+
+Protokół ten działa w warstwie siódmej modelu OSI, implementowany jest on przez daną aplikację do obsługi pojedynczego socketu.\\
+
+Z uwagi na to że serwer pośredniczy w komunikacji pomiędzy klientami, wprowadza on dodatkowy narzut sieciowy i wymaga dodatkowych zasobów.
 
 \newpage
 
@@ -71,7 +102,9 @@ VPN z definicji nadaje dodatkowe opóźnienie ponad to bazowe, wynikające z sie
 Jest to zależne od zastosowania, jednak opóźnienie może mieć na tyle duży wpływ by kategorycznie wykluczyć wykorzystanie sieci wirtualnych w pewnych przypadkach.
 
 \subsection{Utrata pakietów}
-W tunelach UDP, utrata pakietów powoduje braki w danych, ale nie zatrzymuje całej transmisji. Natomiast w tunelach TCP może ona spowodować zjawisko TCP Meltdown. Zarówno protokół VPN, jak i aplikacja wewnątrz tunelu próbują jednocześnie retransmitować zgubione pakiety. Skutkuje to lawinowym wzrostem opóźnień, drastycznym spadkiem przepustowości i częstym zrywaniem sesji.
+W tunelach UDP, utrata pakietów powoduje braki w danych, ale nie zatrzymuje całej transmisji.\\
+
+Natomiast w tunelach TCP może ona spowodować zjawisko TCP Meltdown - zarówno sam VPN, jak i aplikacja wewnątrz tunelu próbują jednocześnie retransmitować zgubione pakiety. Skutkuje to lawinowym wzrostem opóźnień, drastycznym spadkiem przepustowości i częstym zrywaniem sesji.
 
 \subsection{Blokada protokołu UDP}
-Blokuje działanie najwydajniejszych protokołów, które domyślnie korzystają z UDP.
+Wyłącza z użycia najwydajniejsze protokoły, które domyślnie wykorzystają protokół UDP.

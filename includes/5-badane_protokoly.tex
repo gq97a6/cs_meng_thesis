@@ -1,5 +1,125 @@
 \section{Badane protokoły}
+
 \subsection{Kryteria doboru}
+
+\subsubsection{Kryterium nadrzędne}
+Reprezentatywność dla modelu - każdy wybrany protokół powinien być wyraźnym przedstawicielem jednego z dwóch badanych modeli.
+
+\subsubsection{Kryteria opisowe}
+
+\begin{enumerate}[leftmargin=*]
+        \item \textbf{Dojrzałość technologiczna i stabilność} - protokół powinien posiadać stabilną wersję oraz udokumentowaną specyfikację.
+        \item \textbf{Dostępność i otwartość kodu źródłowego} - preferowane są rozwiązania otwartoźródłowe.
+    \item \textbf{Powszechność zastosowania} - protokół powinien mieć rzeczywiste wdrożenia produkcyjne lub szeroką bazę użytkowników.
+    \item \textbf{Aktualność i perspektywa rozwoju} - protokoł nie jest wycofany z użycia lub uznany za przestarzały.
+    \item \textbf{Wsparcie dla różnych platform} - protokół powinien posiadać wsparcie dla różnych architektur i systemów operacyjnych.
+\end{enumerate}
+
+\subsubsection{Kryteria kwalifikacyjne}
+\begin{enumerate}[leftmargin=*]
+    \item Z pominięciem oprogramowania klienckiego w modelu scentralizowanym, wszelkie oprogramowanie wymagane do wdrożenia infrastruktury danego protokołu udostępnione jest na licencji zatwierdzonej przez OSI. \cite{53EK}
+    \item Posiada opublikowaną specyfikację techniczną.
+    \item Posiada co najmniej jedną stabilną wersję oznaczoną jako produkcyjna.
+    \item Jest aktywnie rozwijany, co potwierdza aktywność w repozytorium kodu źródłowego w ciągu ostatnich 24 miesięcy.
+    \item Oprogramowanie serwerowe protokołu posiada wsparcie dla systemu operacyjnego Linux.
+    \item Wdrożenie i utrzymanie nie wymaga użycia infrastruktury lub usług stron trzecich.
+\end{enumerate}
+
+\newpage
+
+\subsubsection{Wyniki kwalifikacji}
+
+Na podstawie zdefiniowanych kryteriów kwalifikacyjnych, do dalszej analizy zakwalifikowano następujące rozwiązania:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{OpenVPN} - dojrzałe rozwiązanie realizujące model scentralizowany. Stanowi powszechnie stosowany punkt odniesienia w~pracach porównawczych dotyczących sieci VPN.
+    \item \textbf{strongSwan} - implementacja protokołu IPsec z~demonem IKEv2, realizująca model scentralizowany. Protokół opisany w~szeregu dokumentów RFC, szeroko stosowany w~środowiskach korporacyjnych.
+    \item \textbf{WireGuard} - minimalistyczny protokół warstwy trzeciej. W~zależności od konfiguracji realizuje model scentralizowany lub rozproszony.
+    \item \textbf{Headscale} - otwartoźródłowa implementacja serwera koordynacyjnego kompatybilna z~klientami Tailscale, wykorzystująca WireGuard jako warstwę transportową. Reprezentant modelu hybrydowego ze scentralizowanym control plane i~rozproszonym data plane. Umożliwia pełne wdrożenie bez zależności od infrastruktury stron trzecich.
+    \item \textbf{Nebula} - protokół mesh VPN oparty na modelu rozproszonym z~węzłami lighthouse pełniącymi rolę koordynacyjną. Całość infrastruktury utrzymywana jest przez użytkownika.
+\end{enumerate}
+
+Z dalszej analizy odrzucono następujące popularne rozwiązania:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Tailscale} - wymaga serwerów kontrolowanych przez Tailscale.
+    \item \textbf{ZeroTier} - nie spełnia kryterium licencji, ponadto wymaga serwerów kontrolowanych przez ZeroTier.
+    \item \textbf{Tinc} - odrzucony ze względu niskiej popularności i braku stabilnej wersji.
+\end{enumerate}
+
+\newpage
 \subsection{OpenVPN}
+
+Jeden z najpopularniejszych protokołów realizujący model scentralizowany ze wsparciem dla TCP i UDP. Często stanowi punkt odniesienia w pracach porównawczych. Udostępniany jest na licencji GPLv2.\\
+
+Autoryzacja opiera się o PKI z obustronną weryfikacją. Certificate Authority podpisuje zarówno certyfikat serwera jak i każdego klienta. Odebranie dostępu odbywa się przez wpisanie na Certificate Revocation Lists.\\
+
+Wspierane są również dodatkowe metody weryfikacji z wykorzystaniem loginu i hasła takie jak: LDAP, RADIUS, PAM, SAML, TOTP/MFA, Active Directory i tym podobne.\\
+
+Dostępny jest oficjalny klient graficzny dla każdego popularnego systemu operacyjnego za wyłączeniem Linux (tylko CLI). Sam serwer jest dostępny w dwóch wariantach: Access Server oraz Community Edition.\\
+
+Access Server jest płatnym produktem nastawionym na klienta korporacyjnego, posiada interfejs webowy posiadających szerokie możliwości konfiguracji oraz wiele narzędzi ułatwiających wdrażanie nowych klientów.\\
+
+Community Edition jest w pełni darmowy, nie posiada interfejsu graficznego, ma jedynie podstawowe funkcjonalności. Jego wdrożenie jest skomplikowane oraz wymaga ręcznego tworzenia wszystkich plików konfiguracyjnych i kryptograficznych.\\
+
+\newpage
 \subsection{WireGuard}
+
+Minimalistyczny protokół przewyższający wydajnością OpenVPN w większości publikacji. W przeciwieństwie do OpenVPN konfiguracja jest skrajnie prosta bo oparta o pojedynczy plik konfiguracyjny.\\
+
+Słynie z wyjątkowo krótkiego kodu źródłowego składającego się z około 4 tysięcy lini kodu, kilkudziesięciokrotnie mniej od konkurencyjnych rozwiązań.\\
+
+Autoryzacja bazuje w całości i wyłącznie na kryptografii asymetrycznej. Każdy węzeł posiada statyczną parę kluczy Curve25519.\\
+
+Wspiera jedynie protokół UDP, nie ma żadnej wbudowanej formy automatycznego odkrywania węzłów czy mechanizmów omijania NAT. Wymaga znajomości adresu IP i klucza publicznego wszystkich węzłów, już na poziomie tworzenia konfiguracji.\\
+
+Wszelkie aspekty sieciowe są precyzyjnie definiowane przez poszczególne reguły iptables, nie przez konfigurację samego węzła. Mimo że protokół jest stricte P2P, dowolność i niskopoziomowość konfiguracji umożliwia stworzenie sieci o dowolnej charakterystyce.\\
+
+Surowy charakter protokołu wprowadza wysoki próg wejścia, natomiast staje się dużym atutem po głębszym zapoznaniu się z dokumentacją.\\
+
+\newpage
 \subsection{Nebula}
+
+Stosunkowo nowy, bo powstały w 2019 roku protokół wprowadzony przez Slack \cite{OEWV} a obecnie utrzymywany przez Defined Networking \cite{N7BM}. U podstaw buduje sieć typu mesh.\\
+
+Autoryzacja jest oparta o mechanizm typu PKI, który umożliwia obustronną weryfikację podczas tworzenia połączeń pomiędzy węzłami. Para kluczy ED25519 pełni rolę Nebula Certificate Authority która podpisuje certyfikaty poszczególnych węzłów.\\
+
+Każdy certyfikat zawiera informacje takie jak predefiniowane IP wewnątrz sieci, do jakich grup należy węzeł (arbitralne ciągi znaków np. administratorzy) oraz okres ważności certyfikatu (not-before/not-after).\\
+
+Dodatkowa kontrola dostępu (filtrowanie pakietów) na poziomie każdego węzła realizowana jest na podstawie przynależności do grupy.\\
+
+Podobnie jak przy WireGuard, konfiguracja każdego węzła oparta jest o pojedynczy plik konfiguracyjny.\\
+
+W prawie każdej sieci Nebula przynajmniej jeden węzeł ma statyczne IP i pełni rolę lighthouse. Ta funkcjonalność umożliwia innym węzłom automatyczne odkrywanie (peer discovery) oraz asystuje przy przechodzeniu przez NAT (NAT traversal). W przypadku gdy nawiązanie połączenia P2P jest niemożliwe, węzeł lighthouse może opcjonalnie pełnić rolę przekaźnika dla innych węzłów.\\
+
+Brak serwera centralnego, mechanizm automatycznego odkrywania z priorytetyzacją połączeń lokalnych oraz prostota konfiguracji pozytywnie wyróżniają ten protokół pośród innych badanych.
+
+\newpage
+\subsection{Headscale}
+
+Otwartoźródłowa implementacja serwera koordynacyjnego dla protokołu Tailscale bazującego na WireGuard. Projekt powstał w 2021 roku.\\
+
+Tailscale w swojej oryginalnej formie jest komercyjnym rozwiązaniem, w którym serwer koordynacyjny pozostaje zamkniętym komponentem hostowanym przez producenta. Headscale eliminuje tę zależność, umożliwiając pełną kontrolę nad infrastrukturą przy jednoczesnym zachowaniu kompatybilności z oficjalnymi klientami Tailscale.\\
+
+Architektura opiera się na modelu scentralizowanego serwera koordynacyjnego, który nie przenosi ruchu użytkowników. Faktyczna komunikacja odbywa się bezpośrednio pomiędzy węzłami, analogicznie do czystego WireGuard.\\
+
+Autoryzacja węzłów realizowana jest za pomocą kluczy generowanych przez serwer koordynacyjny. Po dołączeniu do sieci każdy węzeł generuje parę kluczy WireGuard, a klucz publiczny jest rejestrowany na serwerze koordynacyjnym i dystrybuowany do pozostałych uprawnionych węzłów.\\
+
+Obsługuje mechanizmy automatycznego odkrywania węzłów oraz przechodzenia przez NAT. W przypadku braku możliwości nawiązania bezpośredniego połączenia, ruch może być przekierowany przez serwery DERP (Designated Encrypted Relay for Packets), które również można hostować samodzielnie.\\
+
+Kontrola dostępu definiowana jest centralnie na serwerze koordynacyjnym.\\
+
+\newpage
+\subsection{strongSwan}
+
+Dojrzała i otwarta implementacja protokołu IPsec który jest standardem IETF udokumentowanym w wielu dokumentach RFC. Rozwijany od 2005 roku jako następca projektów FreeS/WAN i openswan.\\
+
+Autoryzacja jest niezwykle elastyczna i obejmuje: certyfikaty X.509 z pełnym wsparciem PKI, klucze współdzielone (PSK), EAP (Extensible Authentication Protocol) z integracją RADIUS, oraz uwierzytelnianie oparte o ECDSA i EdDSA.\\
+
+Możliwe jest również wykorzystanie kart inteligentnych i modułów TPM za pośrednictwem interfejsu PKCS\#11.\\
+
+strongSwan wspiera zarówno tryb tunelowy (cały pakiet IP jest enkapsulowany), jak i tryb transportowy (szyfrowana jest jedynie zawartość pakietu). W trybie tunelowym możliwe jest tworzenie sieci typu site-to-site, road-warrior (klient mobilny łączący się z bramą) oraz bardziej złożonych topologii.\\
+
+Konfiguracja oparta jest o pliki tekstowe, przy czym współistnieją dwa formaty: starszy ipsec.conf oraz nowszy swanctl.conf, będący zalecanym podejściem w bieżących wersjach.\\
+
+Złożoność konfiguracji oraz rozbudowana liczba parametrów stanowią jednocześnie największą zaletę i wadę strongSwan. Elastyczność protokołu pozwala na precyzyjne dostosowanie do niemal każdego scenariusza wdrożeniowego, jednak wiąże się z wysokim progiem wejścia oraz ryzykiem błędów konfiguracyjnych.
