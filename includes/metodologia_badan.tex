@@ -1,0 +1,31 @@
+\section{Metodyka oceny złożoności}
+
+Z uwagi na brak możliwości sprowadzenie tego procesu do pomiaru listy obiektywnych metryk, przedstawiona ocena złożoności ma charakter subiektywnego opisu wad i zalet danego rozwiązania.
+
+\section{Metodyka pomiaru wydajności}
+
+\subsection{Metryki}
+
+Pomiarem objęta została \textbf{przepustowość} oraz \textbf{wykorzystanie procesora}.
+
+\subsection{Narzędzia}
+
+Skrypt automatyzujący proces testowania został napisany z wykorzystaniem języka \textbf{Python}.\\
+
+Proces budowy obrazu dysku został zautomatyzowany w oparciu o język \textbf{Bash}.\\
+
+Pozostałe narzędzia:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{iperf3} - Narzędzie do pomiaru przepustowości sieci pomiędzy dwoma urządzeniami (architektura klient-serwer).
+    \item \textbf{tc (traffic control)} - Zestaw narzędzi do sterowania przepływem ruchu sieciowego, pozwalający na symulację warunków sieciowych (np. opóźnienia, ograniczenia przepustowości).
+    \item \textbf{KVM/QEMU} - Zintegrowany z jądrem Linux hipernadzorca (KVM) oraz emulator sprzętu (QEMU), umożliwiające pełną wirtualizację ze wsparciem sprzętowym.
+    \item \textbf{virsh} - CLI do zarządzania maszynami wirtualnymi.
+    \item \textbf{live-build} - Narzędzie do zautomatyzowanego budowania niestandardowych, uruchamialnych z nośników wymiennych obrazów systemów operacyjnych bazujących na Debianie.
+    \item \textbf{cpupower} - Narzędzie do monitorowania i modyfikowania parametrów pracy procesora, w tym profili zarządzania energią i taktowaniem.
+    \item \textbf{sar} - Narzędzie użyte do gromadzenia danych o obciążenie CPU.
+\end{enumerate}
+
+\newpage
+
+\subsection{}

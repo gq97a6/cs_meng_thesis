@@ -1,0 +1,43 @@
+\section{Wstęp}
+
+\subsection{Motywacje}
+
+Internet początkowo rozwijał się jako zdecentralizowana sieć tworzona oddolnie przez niezależne podmioty. Z czasem usługi świadczone za jego pośrednictwem zyskały na znaczeniu a wraz z tym uległy monopolizacji przez duże korporacje.\\
+
+Aspekty takie jak suwerenność danych, ochrona prywatności, ograniczenie kosztów czy potrzeba autonomii to czynniki motywujące użytkowników indywidualnych oraz małe przedsiębiorstwa do zwrócenia się w stronę samodzielnego utrzymywania infrastruktury usług na potrzeby własne.\\
+
+Z uwagi na niską adopcję IPv6 oraz ograniczenia nakładane przez dostawców usług internetowych stawiane dla prosumentów zasobów sieciowych, niezastąpione przy takim podejściu są sieci wirtualne. Łączą one urządzenia, niezależnie od ich fizycznej lokalizacji. Jest to niezbędne dla zachowania pełni funkcjonalności w porównaniu z komercyjnymi rozwiązaniami.
+
+\subsection{Cel}
+
+Sieci nastawione na użytkowników końcowych stanowią wyzwanie dla każdego kto chce zajmować się utrzymaniem usług na własną rękę - brak publicznego adresu IPv4, restrykcyjny wariant NAT-u, brak możliwości administracji routerem brzegowym, niska stabilność łącza.\\
+
+Praca ma na celu analizę wad i zalet dostępnych rozwiązań w domenie sieci wirtualnych oraz ocenę procesu ich wdrażania.\\
+
+W związku z powyższym, przy analizie skupiono się nie tylko na pomiarze syntetycznej wydajności, ale między innymi, zbadano również skalowalność, łatwość wdrożenia oraz stabilność pracy w restrykcyjnych warunkach sieciowych.
+
+\newpage
+
+\subsection{Prace powiązane}
+
+Istniejąca literatura oceniająca wydajność protokołów VPN powiela fundamentalne błędy metodologiczne, które drastycznie obniżają wagę prezentowanych wyników.\\
+
+Przegląd dotychczasowych analiz uwypukla następujące braki:
+
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Iluzoryczna powtarzalność i manualna analityka} - Publikacje opierają się na ad-hoc konfigurowanych środowiskach i ręcznym uruchamianiu testów. Brak rygorystycznej automatyzacji i dokumentacji infrastruktury sprawia, że odtworzenie warunków testowych jest niemożliwe.
+
+    \item \textbf{Brak izolacji i kontroli zmiennych} - Badania są realizowane w środowiskach nieizolowanych, na systemach typu Windows lub komercyjnych hipernadzorcach współdzielących zasoby. Brak zastosowania mechanizmów izolacji zasobów czy blokada skalowania częstotliwości procesora zanieczyszcza metryki narzutem systemu bazowego oraz zjawiskiem dławienia termicznego.
+
+    \item \textbf{Sterylność pomiarów} - Testy przeprowadzane są niemal wyłącznie w idealnych warunkach laboratoryjnych. Uzyskane w ten sposób maksymalne wartości przepustowości mają znikomą wartość utylitarną.
+
+    \item \textbf{Brak profilowania degradacji} - W pracach omija się emulację rzeczywistych problemów infrastrukturalnych. Brak wykorzystania narzędzi do manipulacji stosem sieciowym i ograniczeń sprzętowych wyklucza ocenę zachowania protokołów w praktycznych zastosowaniach.
+
+    \item \textbf{Jednowymiarowość analiz} - Większość badań sprowadza się do trywialnego wniosku, że dany protokół osiąga najwyższą przepustowość. Całkowicie pomijany jest w nich koszt operacyjny i kontekst zastosowania.
+\end{enumerate}
+
+W opozycji do wyżej wymienionych podejść, niniejsza praca weryfikuje protokoły w kontekście praktycznego zastosowania, gdzie surowa wydajność ustępuje miejsca łatwości wdrożenia i elastyczności.\\
+
+Przedstawiona analiza porównawcza opiera się na w pełni zautomatyzowanym, wirtualnym środowisku, które wymusza sprzętową i sieciową degradację, gwarantując wiarygodność pomiarów.\\
+
+Ponadto praca została wzbogacona o analizę trudności wdrożenia oraz porównanie wad i zalet danych rozwiązań technologicznych.
