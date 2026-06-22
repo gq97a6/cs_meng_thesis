@@ -38,8 +38,6 @@
 \usepackage{fontspec}
 \setmainfont{Courier New}
 
-\include{theme.tex}
-
 %Add and customize bibliography
 \addbibresource{bibliography.bib}
 \DeclareFieldFormat{title}{#1}
@@ -178,6 +176,9 @@
 }
 
 \begin{document} % ------------------------------------------------------------------
+
+%Include theme
+\include{theme.tex}
 
 %Set default font size
 \normalsize
