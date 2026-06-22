@@ -4,6 +4,20 @@ Z uwagi na brak możliwości sprowadzenie tego procesu do pomiaru listy obiektyw
 
 \section{Metodyka pomiaru wydajności}
 
+\subsection{Eksperyment}
+
+Jako eksperyment definiuje się zbiór parametrów:
+
+\begin{itemize}[leftmargin=*]
+    \item Czy oraz jaki protokół jest badany
+    \item Limit przepustowości
+    \item Emulowana wartość delay oraz jitter
+    \item Taktowanie rdzeni przypisanych do klienta i serwera
+    \item Ilość rdzeni przypisanych do klienta i serwera
+\end{itemize}
+
+Cały test składa się z wielu pojedynczych eksperymentów.
+
 \subsection{Metryki}
 
 Pomiarem objęta została \textbf{przepustowość} oraz \textbf{wykorzystanie procesora}.
@@ -18,10 +32,37 @@ Pozostałe narzędzia:
 
 \begin{enumerate}[leftmargin=*]
     \item \textbf{iperf3} - Narzędzie do pomiaru przepustowości sieci pomiędzy dwoma urządzeniami (architektura klient-serwer).
-    \item \textbf{tc (traffic control)} - Zestaw narzędzi do sterowania przepływem ruchu sieciowego, pozwalający na symulację warunków sieciowych (np. opóźnienia, ograniczenia przepustowości).
+    \item \textbf{tc} - Zestaw narzędzi do sterowania przepływem ruchu sieciowego, pozwalający na symulację warunków sieciowych (np. opóźnienia, ograniczenia przepustowości).
     \item \textbf{KVM/QEMU} - Zintegrowany z jądrem Linux hipernadzorca (KVM) oraz emulator sprzętu (QEMU), umożliwiające pełną wirtualizację ze wsparciem sprzętowym.
     \item \textbf{virsh} - CLI do zarządzania maszynami wirtualnymi.
     \item \textbf{live-build} - Narzędzie do zautomatyzowanego budowania niestandardowych, uruchamialnych z nośników wymiennych obrazów systemów operacyjnych bazujących na Debianie.
     \item \textbf{cpupower} - Narzędzie do monitorowania i modyfikowania parametrów pracy procesora, w tym profili zarządzania energią i taktowaniem.
     \item \textbf{sar} - Narzędzie użyte do gromadzenia danych o obciążenie CPU.
 \end{enumerate}
+
+\newpage
+
+\subsection{Założenia narzędzia testowego}
+
+Podstawowym założeniem projektu jest wykorzystanie frameworku live-build do automatycznego przygotowania już skonfigurowanego systemu zawierającego gotowy do użycia skrypt oraz środowisko testowe.\\
+
+Wszelka konfiguracja zgodna jest z praktyką infrastructure as code.\\
+
+Całość maksymalizuje potencjał do otworzenia przez całkowitą eliminację manualnej ingerencji poprzez automatyzację nie tylko procesu testowania jak i również samego etap budowania narzędzia.\\
+
+Sercem projektu jest skrypt orkiestrujący. Jego zadaniem jest przeprowadzenie testu poprzez wywoływanie serii poleceń systemowych na maszynach wirtualnych oraz hoście.
+
+\subsection{Infrastruktura}
+
+Test zakłada wykorzystanie trzech maszyn wirtualnych:\\
+
+Klient \rightleftarrows \ Router \rightleftarrows \ Serwer\\
+
+Każda z maszyn uruchamiana jest z użyciem identycznego obrazu dysku, przygotowywanego w analogiczny sposób co obraz hosta.\\
+
+To jaką rolę przyjmie dana maszyna jest więc umowne, zależne od uruchamianych komend i konfiguracji maszyn wirtualnych z poziomu hosta.\\
+
+Klient i serwer połączeni są odrębnymi sieciami z routerem.\\
+Przekierowywanie ruchu pomiędzy sieciami odbywa się całkowicie na routerze.\\
+
+Istnieje również trzecia, odrębna sieć, dedykowana zarządzaniu maszynami, która łączy wszystkie maszyny wirtualne wraz z hostem.

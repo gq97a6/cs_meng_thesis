@@ -47,3 +47,21 @@
   stringstyle={\ifdarktheme \color{LimeGreen}\ttfamily \else \color{ForestGreen}\ttfamily \fi},
   basicstyle=\small\ttfamily
 }
+
+\lstdefinelanguage{XML}
+{
+  morestring=[b]",
+  morestring=[b]',
+  morecomment=[s]{<!--}{-->},
+  morecomment=[s]{<?}{?>},
+  backgroundcolor=\ifdarktheme \color{darkbackground} \else \color{lightbackground} \fi,
+  stringstyle={\ifdarktheme \color{BurntOrange}\ttfamily \else \color{OrangeRed}\ttfamily \fi},
+  identifierstyle=\ifdarktheme \color{white} \else \color{black} \fi,
+  basicstyle=\small\ttfamily,
+  xleftmargin=1em,
+  framexleftmargin=1em,
+  framextopmargin=0.5em,
+  framexbottommargin=0.5em,
+  frame=tb,
+  framerule=0em,
+}
